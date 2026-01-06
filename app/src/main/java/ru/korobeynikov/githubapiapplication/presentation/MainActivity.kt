@@ -20,17 +20,6 @@ class MainActivity : ComponentActivity() {
             GithubRepositoriesScreen(username = username){
                 username=it
             }
-//            //https://api.github.com/users/destroy-man/repos
-//            val scope= CoroutineScope(Job()+Dispatchers.IO)
-//            val retrofit= Retrofit.Builder().baseUrl("https://api.github.com/").addConverterFactory(
-//                GsonConverterFactory.create()).build()
-//            val api=retrofit.create(GithubAPI::class.java)
-//            scope.launch {
-//                val list=api.getRepositories("destroy-man")
-//                list.forEach { repository ->
-//                    Log.d("myLogs",repository.name)
-//                }
-//            }
         }
     }
 }

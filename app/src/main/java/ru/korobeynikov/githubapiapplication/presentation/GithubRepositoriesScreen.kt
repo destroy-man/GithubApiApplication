@@ -17,17 +17,22 @@ fun GithubRepositoriesScreen(
 ){
     Column {
         val listRepositories by viewModel.listRepositories.collectAsState(emptyList())
+        val error by viewModel.errorState.collectAsState(Error.noError(""))
         OutlinedTextField(value = username, onValueChange = onUsernameChange)
         Button(onClick = {
             viewModel.updateInfoRepositories(username)
         }) {
             Text("Show repositories $username")
         }
-        listRepositories.forEach { repository ->
-            val sb= StringBuilder("Repository name: ${repository.name}\n")
-            sb.appendLine("Repository full name: ${repository.fullName}")
-            sb.appendLine("Repository url: ${repository.url}")
-            Text(sb.toString())
+        if (error is Error.noError) {
+            listRepositories.forEach { repository ->
+                val sb = StringBuilder("Repository name: ${repository.name}\n")
+                sb.appendLine("Repository full name: ${repository.fullName}")
+                sb.appendLine("Repository url: ${repository.url}")
+                Text(sb.toString())
+            }
+        } else {
+            Text(error.message)
         }
     }
 }
