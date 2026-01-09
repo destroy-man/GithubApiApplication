@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -13,7 +14,9 @@ import ru.korobeynikov.githubapiapplication.domain.GithubRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class GithubRepositoriesViewModel @Inject constructor(private val repository: GithubApiRepository): ViewModel() {
+class GithubRepositoriesViewModel @Inject constructor(
+    private val repository: GithubApiRepository,
+) : ViewModel() {
 
     private val _listRepositories = MutableStateFlow<List<GithubRepository>>(emptyList())
     val listRepositories: Flow<List<GithubRepository>> = _listRepositories
@@ -21,8 +24,11 @@ class GithubRepositoriesViewModel @Inject constructor(private val repository: Gi
     private val _errorState = MutableStateFlow<Error>(Error.noError(""))
     val errorState: Flow<Error> = _errorState
 
-    val handler = CoroutineExceptionHandler { context, throwable ->
+    private var viewModelJob: Job? = null
+
+    val handler = CoroutineExceptionHandler { _, throwable ->
         throwable.message?.let { error ->
+            _listRepositories.value = emptyList<GithubRepository>()
             when {
                 error.contains("HTTP 404") -> {
                     _errorState.value = Error.Http404(
@@ -43,8 +49,9 @@ class GithubRepositoriesViewModel @Inject constructor(private val repository: Gi
         }
     }
 
-    fun updateInfoRepositories(username: String){
-        viewModelScope.launch(Dispatchers.IO + handler) {
+    fun updateInfoRepositories(username: String) {
+        viewModelJob?.cancel()
+        viewModelJob = viewModelScope.launch(Dispatchers.IO + handler) {
             _errorState.value = Error.noError("")
             _listRepositories.value = repository.getRepositories(username)
         }

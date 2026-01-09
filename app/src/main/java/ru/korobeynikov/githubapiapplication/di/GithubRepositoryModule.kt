@@ -10,19 +10,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.korobeynikov.githubapiapplication.data.GithubApiRepositoryImpl
 import ru.korobeynikov.githubapiapplication.domain.GithubApiRepository
 
-
 @Module
 @InstallIn(SingletonComponent::class)
-class GithubRepositoryModule {
+interface GithubRepositoryModule {
 
-    @Provides
-    fun provideRetrofit(): Retrofit{
-        return Retrofit.Builder().baseUrl("https://api.github.com/").addConverterFactory(
-            GsonConverterFactory.create()).build()
-    }
+    @Binds
+    fun bindGithubApiRepository(repository: GithubApiRepositoryImpl): GithubApiRepository
 
-    @Provides
-    fun providesGithubApiRepository(retrofit: Retrofit): GithubApiRepository {
-        return GithubApiRepositoryImpl(retrofit)
+    companion object {
+
+        @Provides
+        fun provideRetrofit(): Retrofit {
+            return Retrofit.Builder().baseUrl("https://api.github.com/").addConverterFactory(
+                GsonConverterFactory.create()
+            ).build()
+        }
+
+        @Provides
+        fun providesGithubApiRepositoryImpl(retrofit: Retrofit): GithubApiRepositoryImpl {
+            return GithubApiRepositoryImpl(retrofit)
+        }
     }
 }

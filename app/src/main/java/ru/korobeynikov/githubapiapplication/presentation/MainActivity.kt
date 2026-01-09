@@ -17,8 +17,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             var username by remember { mutableStateOf("destroy-man") }
-            GithubRepositoriesScreen(username = username){
-                username=it
+            GithubRepositoriesScreen(username = username) {
+                username = it
             }
         }
     }
