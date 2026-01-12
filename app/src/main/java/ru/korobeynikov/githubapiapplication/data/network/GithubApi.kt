@@ -1,4 +1,4 @@
-package ru.korobeynikov.githubapiapplication.data
+package ru.korobeynikov.githubapiapplication.data.network
 
 import retrofit2.http.GET
 import retrofit2.http.Path

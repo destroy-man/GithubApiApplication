@@ -1,13 +1,14 @@
-package ru.korobeynikov.githubapiapplication.data
+package ru.korobeynikov.githubapiapplication.data.network
 
 import retrofit2.Retrofit
 import ru.korobeynikov.githubapiapplication.domain.GithubApiRepository
 import ru.korobeynikov.githubapiapplication.domain.GithubRepository
 import javax.inject.Inject
 
-class GithubApiRepositoryImpl @Inject constructor(private val retrofit: Retrofit): GithubApiRepository {
+class GithubApiRepositoryImpl @Inject constructor(private val retrofit: Retrofit) :
+    GithubApiRepository {
     override suspend fun getRepositories(username: String): List<GithubRepository> {
-        val githubApi=retrofit.create(GithubApi::class.java)
+        val githubApi = retrofit.create(GithubApi::class.java)
         return githubApi.getRepositories(username).map { repositoryImpl ->
             GithubRepository(
                 name = repositoryImpl.name,

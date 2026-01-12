@@ -7,7 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.korobeynikov.githubapiapplication.data.GithubApiRepositoryImpl
+import ru.korobeynikov.githubapiapplication.data.network.GithubApiRepositoryImpl
 import ru.korobeynikov.githubapiapplication.domain.GithubApiRepository
 
 @Module

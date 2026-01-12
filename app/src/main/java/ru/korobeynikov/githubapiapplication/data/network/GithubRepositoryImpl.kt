@@ -1,4 +1,4 @@
-package ru.korobeynikov.githubapiapplication.data
+package ru.korobeynikov.githubapiapplication.data.network
 
 import com.google.gson.annotations.SerializedName
 
