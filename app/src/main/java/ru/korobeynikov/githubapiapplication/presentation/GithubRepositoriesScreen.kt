@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun GithubRepositoriesScreen(
     viewModel: GithubRepositoriesViewModel = viewModel(),
     username: String,
-    onUsernameChange: (String) -> Unit,
+    onUsernameChange: (String) -> Unit
 ) {
     Column(modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars)) {
         val listRepositories by viewModel.listRepositories.collectAsState(emptyList())
@@ -42,7 +42,7 @@ fun GithubRepositoriesScreen(
         if (error is Error.noError) {
             LazyColumn {
                 items(listRepositories.size) { index ->
-                    val repository = listRepositories[index]
+                    val repository = listRepositories[index].repository
                     val sb = StringBuilder("Repository name: ${repository.name}\n")
                     sb.appendLine("Repository full name: ${repository.fullName}")
                     sb.appendLine("Repository url: ${repository.url}")

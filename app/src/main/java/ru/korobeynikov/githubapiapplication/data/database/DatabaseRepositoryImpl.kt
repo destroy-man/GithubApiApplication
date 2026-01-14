@@ -5,29 +5,29 @@ import ru.korobeynikov.githubapiapplication.domain.DatabaseRepository
 import ru.korobeynikov.githubapiapplication.domain.GithubRepository
 import ru.korobeynikov.githubapiapplication.domain.UserRepository
 
-class DatabaseRepositoryImpl(private val userRepositoriesDao: UserRepositoriesDao) :
-    DatabaseRepository {
+class DatabaseRepositoryImpl(private val database: UserRepositoriesDatabase) : DatabaseRepository {
 
     override suspend fun getRepositoriesByUser(user: String): List<UserRepository> {
-        return userRepositoriesDao.getRepositoriesByUser(user).map { repositoryImpl ->
+        return database.userRepositoriesDao().getRepositoriesByUser(user).map { repositoryImpl ->
             repositoryImpl.toUserRepository()
         }
     }
 
     override suspend fun getRepositoriesByFullName(fullName: String): List<UserRepository> {
-        return userRepositoriesDao.getRepositoriesByFullName(fullName).map { repositoryImpl ->
-            repositoryImpl.toUserRepository()
-        }
+        return database.userRepositoriesDao().getRepositoriesByFullName(fullName)
+            .map { repositoryImpl ->
+                repositoryImpl.toUserRepository()
+            }
     }
 
     override suspend fun getAllRepositories(): List<UserRepository> {
-        return userRepositoriesDao.getAllRepositories().map { repositoryImpl ->
+        return database.userRepositoriesDao().getAllRepositories().map { repositoryImpl ->
             repositoryImpl.toUserRepository()
         }
     }
 
     override suspend fun addRepositories(repositories: List<UserRepository>) {
-        userRepositoriesDao.insert(
+        database.userRepositoriesDao().insert(
             repositories.map { repository ->
                 repository.toUserRepositoryImpl()
             }
@@ -35,7 +35,7 @@ class DatabaseRepositoryImpl(private val userRepositoriesDao: UserRepositoriesDa
     }
 
     override suspend fun updateRepositories(repositories: List<UserRepository>) {
-        userRepositoriesDao.update(
+        database.userRepositoriesDao().update(
             repositories.map { repository ->
                 repository.toUserRepositoryImpl()
             }
@@ -43,7 +43,7 @@ class DatabaseRepositoryImpl(private val userRepositoriesDao: UserRepositoriesDa
     }
 
     override suspend fun deleteRepositories(repositories: List<UserRepository>) {
-        userRepositoriesDao.delete(
+        database.userRepositoriesDao().delete(
             repositories.map { repository ->
                 repository.toUserRepositoryImpl()
             }
@@ -52,6 +52,7 @@ class DatabaseRepositoryImpl(private val userRepositoriesDao: UserRepositoriesDa
 
     private fun UserRepositoryImpl.toUserRepository(): UserRepository {
         return UserRepository(
+            id = id,
             user = user,
             repository = GithubRepository(
                 repository.name,
@@ -63,6 +64,7 @@ class DatabaseRepositoryImpl(private val userRepositoriesDao: UserRepositoriesDa
 
     private fun UserRepository.toUserRepositoryImpl(): UserRepositoryImpl {
         return UserRepositoryImpl(
+            id = id,
             user = user,
             repository = GithubRepositoryImpl(
                 repository.name,

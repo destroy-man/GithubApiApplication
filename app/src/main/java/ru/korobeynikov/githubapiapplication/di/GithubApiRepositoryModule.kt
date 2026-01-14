@@ -12,7 +12,7 @@ import ru.korobeynikov.githubapiapplication.domain.GithubApiRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface GithubRepositoryModule {
+interface GithubApiRepositoryModule {
 
     @Binds
     fun bindGithubApiRepository(repository: GithubApiRepositoryImpl): GithubApiRepository
